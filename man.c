@@ -53,7 +53,7 @@ static struct file_operations fops = {
 };
 
 static int man_sysfs_open(struct inode *i, struct file *f) {
-	printk(KERN_INFO "mlamp: Device got opened!\n");
+	printk(KERN_INFO "man: Device got opened!\n");
 	return 0;
 }
 
@@ -81,19 +81,19 @@ static int man_sysfs_release(struct inode *inode, struct file *f) {
 }
 
 static int __init man_init(void) {
-	printk(KERN_INFO "mlamp: loading ...\n");
+	printk(KERN_INFO "man: loading ...\n");
 	man_is_open = false;
 
 	man_major = register_chrdev(0, DEVICE_NAME, &fops);
 	if (man_major < 0) {
-		printk(KERN_ALERT "mlamp: error registering driver\n");
+		printk(KERN_ALERT "man: error registering driver\n");
 		return -1;
 	}
 
 	man_class = class_create(THIS_MODULE, DEVICE_NAME);
 	if (IS_ERR(man_class)) {
 		unregister_chrdev(man_major, DEVICE_NAME);
-		printk(KERN_ALERT "mlamp: failed to register device class");
+		printk(KERN_ALERT "man: failed to register device class");
 		return PTR_ERR(man_class);
 	}
 
@@ -101,20 +101,20 @@ static int __init man_init(void) {
 	if (IS_ERR(man_dev)) {
 		class_destroy(man_class);
 		unregister_chrdev(man_major, DEVICE_NAME);
-		printk(KERN_ALERT "mlamp: failed to create device\n");
+		printk(KERN_ALERT "man: failed to create device\n");
 		return PTR_ERR(man_dev);
 	}
 
-	printk(KERN_INFO "mlamp: registered with major: %d\n", man_major);
+	printk(KERN_INFO "man: registered with major: %d\n", man_major);
 	return 0;
 }
 
 static void __exit man_exit(void) {
-	printk(KERN_INFO "mlamp: exiting ...\n");
+	printk(KERN_INFO "man: exiting ...\n");
 	device_destroy(man_class, MKDEV(man_major, 0));
 	class_destroy(man_class);
 	unregister_chrdev(man_major, DEVICE_NAME);
-	printk(KERN_INFO "mlamp: done\n");
+	printk(KERN_INFO "man: done\n");
 
 }
 
